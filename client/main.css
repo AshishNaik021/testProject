@@ -1,0 +1,11 @@
+body{
+	background-color: #eee;
+}
+.contentWrapper{
+	background-color: #fff;
+	border-top: 3px solid #33c;
+	padding: 15px 30px;
+	margin: 15px 0px;
+	min-height: 510px;
+	height: auto;
+}

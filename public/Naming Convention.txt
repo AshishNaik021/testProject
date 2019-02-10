@@ -1,0 +1,38 @@
+Naming Convention
+
+
+	client
+		- main.css  (Global nature)
+	server
+	imports
+		- module1
+			- MyComponent1
+				-	someCollection.js		(==> api file)
+				- MyComponent.jsx
+				- SubComponent1.jsx
+				- SubComponent2.jsx
+				- SubComponent3.jsx
+				- style.css
+
+			- MyComponent2
+				-	someCollection.js		(==> api file)
+				- MyComponent.jsx
+				- SubComponent1.jsx
+				- SubComponent2.jsx
+				- SubComponent3.jsx
+				- style.css
+				
+		- module2
+			-	someCollection.js		(==> api file)
+			- MyComponent.jsx
+			- style.css
+		- module3
+			-	someCollection.js		(==> api file)
+			- MyComponent.jsx
+			- style.css
+	lib
+	public
+
+
+	node_modules
+	.meteor
