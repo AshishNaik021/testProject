@@ -9,9 +9,42 @@ import { EmpMaster } from '/imports/empInduction/EmpBasicInfo/empMaster.js';
 class EmpBasicInfo extends Component{
 	constructor(props){
 		super(props);
+		var urlEmpId = FlowRouter.getParam("empid");
+		if(urlEmpId){
+			var action = "Update";
+		}else{
+			var action = "Submit";
+		}
+
+
 		this.state = {
+			"empId" : urlEmpId,
+			"action" : action,
+			"firstName": "",
+			"middleName": "",
+			"lastName": "",
+			"email": "",
+			"phone": "",
+			"dob": "",
 		};		
+
 	}
+
+  componentWillReceiveProps(nextProps) {
+  	if(!nextProps.loading){
+      if(nextProps.oneEmpData){
+		    this.setState({
+		        "firstName" 	: nextProps.oneEmpData.firstName,	        
+		        "middleName" 	: nextProps.oneEmpData.middleName,	        
+		        "lastName" 		: nextProps.oneEmpData.lastName,	        
+		        "email" 			: nextProps.oneEmpData.email,	        
+		        "phone" 			: nextProps.oneEmpData.phone,	        
+		        "dob" 				: nextProps.oneEmpData.dob,	        
+		    });
+		  }
+		}
+	}
+
 
 	submitBasicInfo(event){
 		event.preventDefault();
@@ -24,43 +57,52 @@ class EmpBasicInfo extends Component{
 			dob 				: this.refs.dob.value,		
 		};
 
-			Meteor.call("insertBasicInfo",formValues,
+		if(this.state.action == "Submit"){
+				Meteor.call("insertBasicInfo",formValues,
+											(error,result)=>{
+												if(error){
+													console.log("Something went wrong! Error = ", error);
+												}else{
+													swal("Congrats!","Your Information Submitted Successfully.","success");
+													console.log("latest id = ",result);
+													FlowRouter.go("/empProfile/"+result);
+													// this.setState({"inputValue":""});
+												}
+											});	
+		}else{
+			formValues._id = this.state.empId;
+			Meteor.call("updateBasicInfo",formValues,
 										(error,result)=>{
 											if(error){
 												console.log("Something went wrong! Error = ", error);
 											}else{
-												swal("Congrats!","Your Information Submitted Successfully.","success");
+												swal("Congrats!","Employee Profile Updated Successfully.","success");
 												console.log("latest id = ",result);
-												FlowRouter.go("/empProfile/"+result);
-												// this.setState({"inputValue":""});
+												FlowRouter.go("/empProfile/"+this.state.empId);
 											}
 										});	
-
-		if(this.state.operation == "edit"){
-			Tasks.update({"_id":this.state.taskid},
-					{$set: 	{
-										"task" : inputTask,
-										"createdAt" : new Date(),
-									} 
-					}
-					,(error,result)=>{
-						if(error){
-							console.log("error = ", error);
-						}
-						if(result){
-							console.log("result = ",result);
-							alert("Task Edited Successfully");
-							this.setState({"inputValue":"", "operation":"insert","taskid":""});
-						}
-				});			
-
 		}
 
+	}
+
+	handleChange(event){
+		event.preventDefault();
+    this.setState({
+        "firstName" 	: this.refs.firstName.value,	        
+        "middleName" 	: this.refs.middleName.value,	        
+        "lastName" 		: this.refs.lastName.value,	        
+        "email" 			: this.refs.email.value,	        
+        "phone" 			: this.refs.phone.value,	        
+        "dob" 				: this.refs.dob.value,	        
+    });
 
 	}
 
 
 	render(){
+		// console.log(this.props.oneEmpData[0]);
+		var emp = this.props.oneEmpData[0];
+
 		return (
 			<div className="row">
 		    	<h3> Employee Basic Info </h3> 
@@ -72,21 +114,21 @@ class EmpBasicInfo extends Component{
 				    		<label>First Name</label>
 				    		<div className="input-group">
 					    		<span className="input-group-addon"><i className="fa fa-user"></i></span>
-					    		<input type="text" ref="firstName" className="form-control" />
+					    		<input type="text" value={this.state.firstName} ref="firstName" className="form-control" onChange={this.handleChange.bind(this)} />
 					    	</div>
 				    	</div>
 				    	<div className="form-group col-lg-4 col-md-4 col-sm-6">
 				    		<label>Middle Name</label>
 				    		<div className="input-group">
 					    		<span className="input-group-addon"><i className="fa fa-user"></i></span>
-					    		<input type="text" ref="middleName" className="form-control" />
+					    		<input type="text" value={this.state.middleName} ref="middleName" className="form-control" onChange={this.handleChange.bind(this)}  />
 					    	</div>
 				    	</div>
 				    	<div className="form-group col-lg-4 col-md-4 col-sm-6">
 				    		<label>Last Name</label>
 				    		<div className="input-group">
 					    		<span className="input-group-addon"><i className="fa fa-user"></i></span>
-					    		<input type="text" ref="lastName" className="form-control" />
+					    		<input type="text" value={this.state.lastName} ref="lastName" className="form-control"  onChange={this.handleChange.bind(this)} />
 					    	</div>
 				    	</div>
 			    	</div>	
@@ -96,21 +138,21 @@ class EmpBasicInfo extends Component{
 				    		<label>Email</label>
 				    		<div className="input-group">
 					    		<span className="input-group-addon"><i className="fa fa-envelope"></i></span>
-					    		<input type="email" ref="email" className="form-control" />
+					    		<input type="email" value={this.state.email} ref="email" className="form-control"  onChange={this.handleChange.bind(this)} />
 					    	</div>
 				    	</div>
 				    	<div className="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
 				    		<label>Phone</label>
 				    		<div className="input-group">
 					    		<span className="input-group-addon"><i className="fa fa-phone"></i></span>
-					    		<input type="phone" ref="phone" className="form-control" />
+					    		<input type="phone" value={this.state.phone} ref="phone" className="form-control"  onChange={this.handleChange.bind(this)} />
 					    	</div>
 				    	</div>
 				    	<div className="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
 				    		<label>DoB</label>
 				    		<div className="input-group">
 					    		<span className="input-group-addon"><i className="fa fa-calendar"></i></span>
-					    		<input type="Date" ref="dob" className="form-control" />
+					    		<input type="Date" value={this.state.dob} ref="dob" className="form-control"  onChange={this.handleChange.bind(this)} />
 					    	</div>
 				    	</div>
 			    	</div>	
@@ -118,7 +160,7 @@ class EmpBasicInfo extends Component{
 
 
 						<div className="col-lg-12">	
-							<button className="col-lg-2 btn btn-primary pull-right" onClick={this.submitBasicInfo.bind(this)}> Submit </button>
+							<button className="col-lg-2 btn btn-primary pull-right" onClick={this.submitBasicInfo.bind(this)}> {this.state.action} </button>
 						</div>		    	
 					</form>			
 		    </div>
@@ -128,11 +170,19 @@ class EmpBasicInfo extends Component{
 
 
 export default withTracker(()=>{
-	// Meteor.subscribe("tasksData");
+	if(FlowRouter.getParam("empid")){
+		var urlEmpId = FlowRouter.getParam("empid");
+	}else{
+		var urlEmpId = 0;
+	}
+	var empSub = Meteor.subscribe("empData",urlEmpId);
+
+	const oneEmpData = EmpMaster.findOne({})||{};
+	// console.log("oneEmpData = ",oneEmpData);
 
 	return {
-		// "allTasks" 			: Tasks.find({},{sort:{"createdAt":-1}}).fetch(),
-		// "total"					: Tasks.find({}).count(),
-		// "completed"			: Tasks.find({"status":"completed"}).count(),
+		"loading" : !empSub.ready(),
+		"oneEmpData" 	: oneEmpData,
 	}
+
 })(EmpBasicInfo);

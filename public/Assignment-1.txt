@@ -1,0 +1,25 @@
+Assignment - 1
+
+Signup page
+	-	First Name
+	- Last Name
+	- Email 
+	- Phone
+	- Password
+	- Confirm Password
+
+Login
+	- Email
+	-	Password
+
+Dashboard
+	- Admin LTE 
+
+Menubar
+	- Emp Basic Info Form (Insert & Update), Must have Form Validation
+	- Emp Profile
+	- Emp List (User React-Table) with Edit, Delete, Print, Download as Excel Sheet options
+	- List -> View Profile Icon -> Show profile in Modal
+	- List -> Add new User -> New User Form open in Modal. 
+
+	

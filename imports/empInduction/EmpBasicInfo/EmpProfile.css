@@ -1,0 +1,12 @@
+.userImg{
+	height: 100px;
+}
+
+.actionIcon{
+	padding: 10px;
+	cursor: pointer;
+}
+
+.actionIcon:hover{
+	background-color: #eee;
+}

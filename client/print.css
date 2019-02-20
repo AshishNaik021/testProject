@@ -1,0 +1,14 @@
+/*@media print {*/
+  table{
+  	font-family:georgia, times, serif;
+  	border: 1px solid #333;
+  }
+  table tr{
+  	border: 1px solid #333;	
+  }
+  table td{
+  	border: 1px solid #333;	
+  	text-align: center;
+  	padding: 5px;
+  }
+/*}*/

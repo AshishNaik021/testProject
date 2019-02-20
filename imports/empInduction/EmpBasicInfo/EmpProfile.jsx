@@ -4,18 +4,15 @@ import swal from 'sweetalert';
 
 
 import { EmpMaster } from '/imports/empInduction/EmpBasicInfo/empMaster.js';
-
+import "./EmpProfile.css";
 
 class EmpProfile extends Component{
 	constructor(props){
 		super(props);
 		var empId = FlowRouter.getParam("empid");
-		var empData = EmpMaster.findOne({"_id" : empId});
-		console.log("empData = ",empData);
-		
+
 		this.state = {
 			"empId"	: empId, 
-			"empData" : empData,
 		};		
 
 
@@ -67,68 +64,87 @@ class EmpProfile extends Component{
 
 	}
 
+	deleteEmpProfile(event){
+		event.preventDefault();
+		Meteor.call("deleteEmpProfile",this.state.empId,
+								(error,result) => {
+									if(error){
+										swal("Something is Wrong","Contact Your System Administrator","error");
+										console.log(error);
+									}else{
+										swal("Great!","Delete is Successful!","success");
+										FlowRouter.go("/empInfo");
+									}
+								}
+		);
+	}
 
 	render(){
-		console.log("empId = ",this.state.empId);
 		var emp = this.props.allEmp[0];
+		if(emp){
+			if(emp.dob==""){
+				emp.dob = "-- NA --";
+			}
+		}
+		console.log("emp = ",emp);
 		
 
 		return (
 			<div className="row">
-		    	<h3> Employee Profile </h3> 
-		    	<hr/>
+					<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<div className="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+			    		<h3> Employee Profile </h3> 
+			    	</div>
+						<div className="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+			    		<div id={"del"+this.state.empId} className="actionIcon pull-right" onClick={this.deleteEmpProfile.bind(this)}>
+			    			<i className="fa fa-trash"> </i>
+			    		</div>
+
+							<a href={"/empInfo/"+this.state.empId} >
+				    		<div id={"edit"+this.state.empId} className="actionIcon pull-right">
+				    			<i className="fa fa-pencil"> </i>
+				    		</div>
+				    	</a>
+			    	</div>
+		    	</div>
+
+		    	<hr className="col-lg-12 col-md-12 col-sm-12 col-xs-12"/>
 
 					<section className="col-lg-12">
-						<div className="col-lg-12">	
-				    	<div className="col-lg-4 col-md-4 col-sm-6">
-				    		<div>First Name</div>
-				    		<div>{this.state.empData ? this.state.empData.firstName : <img src='/images/loading.gif' />}</div>
-				    	</div>
-				    	<div className="form-group col-lg-4 col-md-4 col-sm-6">
-				    		<label>Middle Name</label>
-				    		<div className="input-group">
-					    		<span className="input-group-addon"><i className="fa fa-user"></i></span>
-					    		<input type="text" ref="middleName" className="form-control" />
+						<div className="col-lg-2">	
+							<img src="/images/male.png" className="userImg" />
+						</div>						
+						<div className="col-lg-10">	
+							<div className="col-lg-12">	
+					    	<div className="col-lg-4 col-md-4 col-sm-6">
+					    		<div>First Name</div>
+					    		<div>{emp ? emp.firstName : <img src='/images/loading.gif' />}</div>
 					    	</div>
-				    	</div>
-				    	<div className="form-group col-lg-4 col-md-4 col-sm-6">
-				    		<label>Last Name</label>
-				    		<div className="input-group">
-					    		<span className="input-group-addon"><i className="fa fa-user"></i></span>
-					    		<input type="text" ref="lastName" className="form-control" />
+					    	<div className="form-group col-lg-4 col-md-4 col-sm-6">
+					    		<div>Middle Name</div>
+					    		<div>{emp ? emp.middleName : <img src='/images/loading.gif' />}</div>
 					    	</div>
-				    	</div>
+					    	<div className="form-group col-lg-4 col-md-4 col-sm-6">
+					    		<div>Last Name</div>
+					    		<div>{emp ? emp.lastName : <img src='/images/loading.gif' />}</div>
+					    	</div>
+				    	</div>	
+
+							<div className="col-lg-12">	
+					    	<div className="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12 ">
+					    		<div>Email</div>
+					    		<div>{emp ? emp.email : <img src='/images/loading.gif' />}</div>
+					    	</div>
+					    	<div className="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+					    		<div>Phone</div>
+					    		<div>{emp ? emp.phone : <img src='/images/loading.gif' />}</div>
+					    	</div>
+					    	<div className="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+					    		<div>DoB</div>
+					    		<div>{emp ? emp.dob : <img src='/images/loading.gif' />}</div>
+					    	</div>
+				    	</div>	
 			    	</div>	
-
-						<div className="col-lg-12">	
-				    	<div className="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12 ">
-				    		<label>Email</label>
-				    		<div className="input-group">
-					    		<span className="input-group-addon"><i className="fa fa-envelope"></i></span>
-					    		<input type="email" ref="email" className="form-control" />
-					    	</div>
-				    	</div>
-				    	<div className="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
-				    		<label>Phone</label>
-				    		<div className="input-group">
-					    		<span className="input-group-addon"><i className="fa fa-phone"></i></span>
-					    		<input type="phone" ref="phone" className="form-control" />
-					    	</div>
-				    	</div>
-				    	<div className="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
-				    		<label>DoB</label>
-				    		<div className="input-group">
-					    		<span className="input-group-addon"><i className="fa fa-calendar"></i></span>
-					    		<input type="Date" ref="dob" className="form-control" />
-					    	</div>
-				    	</div>
-			    	</div>	
-
-
-
-						<div className="col-lg-12">	
-							<button className="col-lg-2 btn btn-primary pull-right" onClick={this.submitBasicInfo.bind(this)}> Submit </button>
-						</div>		    	
 					</section>			
 		    </div>
 		);
@@ -137,11 +153,13 @@ class EmpProfile extends Component{
 
 
 export default withTracker(()=>{
-	Meteor.subscribe("empData");
-	var allEmpData = EmpMaster.find({}).fetch();
-	console.log("allEmpData = ",allEmpData);
+	var empIdCont = FlowRouter.getParam("empid");
+	Meteor.subscribe("empData",empIdCont);
+
+	const oneEmpData = EmpMaster.find({}).fetch();
+	console.log("oneEmpData = ",oneEmpData);
 
 	return {
-		"allEmp" 			: allEmpData,
+		"allEmp" 			: oneEmpData,
 	}
 })(EmpProfile);

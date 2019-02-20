@@ -10,9 +10,11 @@
   "dependencies": {
     "@babel/runtime": "^7.1.5",
     "meteor-node-stubs": "^0.4.1",
+    "printd": "^1.2.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-mounter": "^1.2.0",
+    "react-table": "^6.9.2",
     "swal": "^0.1.0",
     "sweetalert": "^2.1.2"
   },
